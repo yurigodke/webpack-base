@@ -2,10 +2,23 @@ const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+const htmlPageNames = ['home', 'test'];
+
+const entrys = {}
+const multipleHtml = htmlPageNames.map(name => {
+  entrys[name] = `./src/${name}/index.js`;
+  return new HtmlWebpackPlugin({
+    template: `src/${name}/index.htm`, // relative path to the HTML files
+    filename: `${name}.htm`, // output HTML files,
+    chunks: [name]
+  })
+});
+
+
 module.exports = {
-  entry: "./src/index.js",
+  entry: entrys,
   output: {
-    filename: "main.js",
+    filename: "[name].js",
     path: path.resolve(__dirname, "dist")
   },
   module: {
@@ -30,15 +43,12 @@ module.exports = {
     ]
   },
   plugins: [
+    ...multipleHtml,
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
       filename: "[name].css",
       chunkFilename: "[id].css"
-    }),
-    new HtmlWebpackPlugin({
-      filename: "index.htm",
-      template: "src/index.htm"
     })
   ]
 };

@@ -1,8 +1,9 @@
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const fs = require('fs');
 
-const htmlPageNames = ['home', 'test'];
+const htmlPageNames = fs.readdirSync('./src');
 
 const entrys = {}
 const multipleHtml = htmlPageNames.map(name => {
@@ -18,8 +19,8 @@ const multipleHtml = htmlPageNames.map(name => {
 module.exports = {
   entry: entrys,
   output: {
-    filename: "[name].js",
-    path: path.resolve(__dirname, "dist")
+    filename: 'assets/js/[name].js',
+    path: path.resolve(__dirname, 'dist')
   },
   module: {
     rules: [
@@ -27,17 +28,17 @@ module.exports = {
         test: /\.js$/,
         exclude: /(node_modules)/,
         use: {
-          loader: "babel-loader"
+          loader: 'babel-loader'
         }
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
-          process.env.NODE_ENV !== "production"
-            ? "style-loader"
+          process.env.NODE_ENV !== 'production'
+            ? 'style-loader'
             : MiniCssExtractPlugin.loader,
-          "css-loader",
-          "sass-loader"
+          'css-loader',
+          'sass-loader'
         ]
       }
     ]
@@ -47,8 +48,8 @@ module.exports = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: "[name].css",
-      chunkFilename: "[id].css"
+      filename: 'assets/css/[name].css',
+      chunkFilename: '[id].css'
     })
   ]
 };

@@ -21,7 +21,8 @@ module.exports = {
   entry: entrys,
   output: {
     filename: 'assets/js/[name].js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    assetModuleFilename: 'assets/images/[hash][ext][query]'
   },
   module: {
     rules: [
@@ -58,29 +59,17 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
-        type: 'javascript/auto',
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[hash].[ext]',
-              outputPath: 'assets/images',
-              esModule: false,
-            }
-          },
-        ],
+        type: 'asset/resource',
       },
       {
         test: /\.svg$/i,
-        type: 'javascript/auto',
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              generator: (content) => svgToMiniDataURI(content.toString())
-            },
-          },
-        ],
+        type: 'asset/inline',
+        generator: {
+          dataUrl: content => {
+            content = content.toString();
+            return svgToMiniDataURI(content);
+          }
+        }
       },
       {
         test: /\.s[ac]ss$/i,

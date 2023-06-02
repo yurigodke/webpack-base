@@ -1,4 +1,4 @@
-import style from "./index.scss";
+import "./index.scss";
 
 const test = () => {
   console.log("teste");

@@ -1,26 +1,12 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const fs = require('fs');
 const svgToMiniDataURI = require('mini-svg-data-uri');
 
-const htmlPageNames = fs.readdirSync('./src');
-
-const entrys = {}
-const multipleHtml = htmlPageNames.map(name => {
-  entrys[name] = `./src/${name}/index.js`;
-  return new HtmlWebpackPlugin({
-    template: `src/${name}/index.htm`,
-    filename: `${name}.htm`,
-    chunks: [name]
-  })
-});
-
-
 module.exports = {
-  entry: entrys,
+  entry: './src/index.js',
   output: {
-    filename: 'assets/js/[name].js',
+    filename: 'assets/js/main.js',
     path: path.resolve(__dirname, 'dist'),
     assetModuleFilename: 'assets/images/[hash][ext][query]'
   },
@@ -84,9 +70,12 @@ module.exports = {
     ]
   },
   plugins: [
-    ...multipleHtml,
+    new HtmlWebpackPlugin({
+      template: 'src/index.htm',
+      filename: 'index.htm'
+    }),
     new MiniCssExtractPlugin({
-      filename: 'assets/css/[name].css',
+      filename: 'assets/css/style.css',
       chunkFilename: '[id].css'
     })
   ],
